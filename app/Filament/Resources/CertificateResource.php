@@ -30,9 +30,12 @@ class CertificateResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name'),
-                MarkdownEditor::make('description'),
                 Toggle::make('is_active')->default(true),
-                FileUpload::make('certificate_image'),
+                MarkdownEditor::make('description')->columnSpan(2),
+                FileUpload::make('certificate_image')
+                    ->multiple()
+                    ->directory('certificate-images')
+                    ->storeFileNamesIn('original_filenames'),
             ]);
     }
 
