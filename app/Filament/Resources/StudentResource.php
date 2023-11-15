@@ -23,6 +23,7 @@ use Filament\Tables\Actions\Action as TableAction;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Filament\Resources\StudentResource\RelationManagers\GuardiansRelationManager;
+use App\Models\Certificate;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Actions\BulkAction;
@@ -69,6 +70,21 @@ class StudentResource extends Resource
                                 TextInput::make('value')
                                     ->required()
                                     ->maxLength(255),
+                            ])
+                            ->columns(2),
+                    ]),
+                Section::make('Certificates')
+                    ->description('Add student certificate information')
+                    ->collapsible()
+                    ->schema([
+                        Repeater::make('certificates')
+                            ->relationship('certificates')
+                            ->schema([
+                                Select::make('certificate_id')
+                                    ->options(Certificate::all()->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->required(),
+                                TextInput::make('description')
                             ])
                             ->columns(2),
                     ]),
