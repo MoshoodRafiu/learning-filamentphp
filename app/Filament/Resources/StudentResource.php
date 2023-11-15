@@ -13,13 +13,14 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\GlobalSearch\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Htmlable;
 use App\Filament\Resources\StudentResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StudentResource\RelationManagers;
-use Filament\GlobalSearch\Actions\Action;
+use App\Filament\Resources\StudentResource\RelationManagers\GuardiansRelationManager;
 
 class StudentResource extends Resource
 {
@@ -82,7 +83,7 @@ class StudentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            GuardiansRelationManager::class
         ];
     }
 

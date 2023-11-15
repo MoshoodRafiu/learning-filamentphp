@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Student;
+use App\Models\Standard;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -13,6 +14,15 @@ class StandardSeeder extends Seeder
      */
     public function run(): void
     {
-        Student::factory(10)->create();
+        $data = collect();
+
+        for ($i = 1; $i <= 10; $i++) {
+            $data->push([
+                'name' => "Std {$i}",
+                'class_number' => $i
+            ]);
+        }
+
+        Standard::factory()->createMany($data);
     }
 }

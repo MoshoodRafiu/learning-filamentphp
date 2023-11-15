@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Guardian;
+use App\Models\Student;
 use App\Models\Standard;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class StudentSeeder extends Seeder
 {
@@ -13,15 +15,8 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = collect();
-
-        for ($i = 1; $i <= 10; $i++) {
-            $data->push([
-                'name' => "Std {$i}",
-                'class_number' => $i
-            ]);
-        }
-
-        Standard::factory()->createMany($data);
+        Student::factory(10)
+            ->has(Guardian::factory()->count(3))
+            ->create();
     }
 }
