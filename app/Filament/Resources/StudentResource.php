@@ -13,11 +13,13 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\GlobalSearch\Actions\Action;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Htmlable;
 use App\Filament\Resources\StudentResource\Pages;
+use Filament\Tables\Actions\Action as TableAction;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Filament\Resources\StudentResource\RelationManagers\GuardiansRelationManager;
@@ -72,6 +74,24 @@ class StudentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    TableAction::make('Promote')
+                        ->action(function (Student $student) {
+                            $student->standard_id += 1;
+                            $student->save();
+                        })
+                        ->color('success')
+                        ->requiresConfirmation(),
+                    TableAction::make('Demote')
+                        ->action(function (Student $student) {
+                            if ($student->standard_id > 1) {
+                                $student->standard_id -= 1;
+                                $student->save();
+                            }
+                        })
+                        ->color('danger')
+                        ->requiresConfirmation(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
