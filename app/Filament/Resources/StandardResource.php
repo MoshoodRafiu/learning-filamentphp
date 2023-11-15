@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\StudentResource\Pages;
-use App\Filament\Resources\StudentResource\RelationManagers;
-use App\Models\Student;
+use App\Filament\Resources\StandardResource\Pages;
+use App\Filament\Resources\StandardResource\RelationManagers;
+use App\Models\Standard;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -15,11 +15,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class StudentResource extends Resource
+class StandardResource extends Resource
 {
-    protected static ?string $model = Student::class;
+    protected static ?string $model = Standard::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -27,12 +27,12 @@ class StudentResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required()
+                    ->minLength(2)
                     ->maxLength(255),
-                TextInput::make('student_id')
+                TextInput::make('class_number')
+                    ->numeric()
                     ->required()
-                    ->minLength(10),
-                TextInput::make('address_1'),
-                TextInput::make('address_2'),
+                    ->minValue(0)
             ]);
     }
 
@@ -40,7 +40,8 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('name'),
+                TextColumn::make('class_number'),
             ])
             ->filters([
                 //
@@ -65,9 +66,7 @@ class StudentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListStudents::route('/'),
-            'create' => Pages\CreateStudent::route('/create'),
-            'edit' => Pages\EditStudent::route('/{record}/edit'),
+            'index' => Pages\ListStandards::route('/'),
         ];
     }
 }

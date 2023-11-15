@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'moshood@test.com',
         ]);
 
-        Student::factory(10)->create();
+        $this->call(StudentSeeder::class);
+        $this->call(StandardSeeder::class);
     }
 }

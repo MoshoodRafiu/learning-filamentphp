@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\StudentResource\Pages;
 
-use App\Filament\Resources\StudentResource;
 use Filament\Actions;
+use Filament\Tables\Table;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\StudentResource;
 
 class ListStudents extends ListRecords
 {
@@ -15,5 +17,10 @@ class ListStudents extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    protected function getTableQuery(): ?Builder
+    {
+        return parent::getResource()::getEloquentQuery()->latest();
     }
 }
