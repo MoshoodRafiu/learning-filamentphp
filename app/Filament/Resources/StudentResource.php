@@ -23,8 +23,8 @@ use Filament\Tables\Actions\Action as TableAction;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Filament\Resources\StudentResource\RelationManagers\GuardiansRelationManager;
-use Filament\Forms\Components\Wizard;
-use Filament\Forms\Components\Wizard\Step;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -40,33 +40,38 @@ class StudentResource extends Resource
     {
         return $form
             ->schema([
-                Wizard::make([
-                    Step::make('Personal Information')
-                        ->schema([
-                            TextInput::make('name')
-                                ->required()
-                                ->maxLength(255),
-                            TextInput::make('student_id')
-                                ->required()
-                                ->minLength(10),
-                        ])
-                        ->icon('heroicon-o-users'),
-                    Step::make('Address')
-                        ->schema([
-                            TextInput::make('address_1'),
-                            TextInput::make('address_2'),
-                        ])
-                        ->icon('heroicon-o-home'),
-                    Step::make('School')
-                        ->schema([
-                            Select::make('standard_id')
-                                ->required()
-                                ->relationship('standard', 'name')
-                        ])
-                        ->icon('heroicon-o-academic-cap'),
-                ])
-                ->skippable()
-                ->startOnStep(3),
+                Section::make('Personal Information')
+                    ->description('Add personal information')
+                    ->collapsible()
+                    ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('student_id')
+                            ->required()
+                            ->minLength(10),
+                        TextInput::make('address_1'),
+                        TextInput::make('address_2'),
+                        Select::make('standard_id')
+                            ->required()
+                            ->relationship('standard', 'name'),
+                    ]),
+                Section::make('Medical Information')
+                    ->description('Add medical information about the student from the list')
+                    ->collapsible()
+                    ->collapsed()
+                    ->schema([
+                        Repeater::make('vitals')
+                            ->schema([
+                                Select::make('name')
+                                    ->required()
+                                    ->options(config('sm_config.vitals')),
+                                TextInput::make('value')
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->columns(2),
+                    ]),
             ]);
     }
 
