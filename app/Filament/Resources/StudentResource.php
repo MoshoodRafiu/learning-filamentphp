@@ -12,6 +12,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -44,11 +46,23 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('standard.name')->searchable(),
+                TextColumn::make('name')
+                    ->searchable(),
+                TextColumn::make('standard.name')
+                    ->searchable(),
             ])
             ->filters([
-                //
+                Filter::make('start')
+                    ->query(fn (Builder $query): Builder => $query->where('standard_id', 1)),
+                SelectFilter::make('standard_id')
+                    ->options([
+                        1 => 'Standard 1',
+                        4 => 'Standard 4',
+                        9 => 'Standard 9',
+                    ])
+                    ->label('Select Standard'),
+                SelectFilter::make('All Standard')
+                    ->relationship('standard', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
