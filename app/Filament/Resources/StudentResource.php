@@ -23,6 +23,8 @@ use Filament\Tables\Actions\Action as TableAction;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Filament\Resources\StudentResource\RelationManagers\GuardiansRelationManager;
+use Filament\Forms\Components\Wizard;
+use Filament\Forms\Components\Wizard\Step;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -38,17 +40,33 @@ class StudentResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('student_id')
-                    ->required()
-                    ->minLength(10),
-                TextInput::make('address_1'),
-                TextInput::make('address_2'),
-                Select::make('standard_id')
-                    ->required()
-                    ->relationship('standard', 'name')
+                Wizard::make([
+                    Step::make('Personal Information')
+                        ->schema([
+                            TextInput::make('name')
+                                ->required()
+                                ->maxLength(255),
+                            TextInput::make('student_id')
+                                ->required()
+                                ->minLength(10),
+                        ])
+                        ->icon('heroicon-o-users'),
+                    Step::make('Address')
+                        ->schema([
+                            TextInput::make('address_1'),
+                            TextInput::make('address_2'),
+                        ])
+                        ->icon('heroicon-o-home'),
+                    Step::make('School')
+                        ->schema([
+                            Select::make('standard_id')
+                                ->required()
+                                ->relationship('standard', 'name')
+                        ])
+                        ->icon('heroicon-o-academic-cap'),
+                ])
+                ->skippable()
+                ->startOnStep(3),
             ]);
     }
 
