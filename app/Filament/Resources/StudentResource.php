@@ -23,6 +23,8 @@ use Filament\Tables\Actions\Action as TableAction;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Filament\Resources\StudentResource\RelationManagers\GuardiansRelationManager;
+use Filament\Tables\Actions\BulkAction;
+use Illuminate\Database\Eloquent\Collection;
 
 class StudentResource extends Resource
 {
@@ -96,6 +98,15 @@ class StudentResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    BulkAction::make('Promote All')
+                        ->action(function (Collection $students) {
+                            $students->each(function ($student) {
+                                $student->standard_id += 1;
+                                $student->save();
+                            });
+                        })
+                        ->requiresConfirmation()
+                        ->deselectRecordsAfterCompletion()
                 ]),
             ]);
     }
