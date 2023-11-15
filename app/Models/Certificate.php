@@ -13,5 +13,6 @@ class Certificate extends Model
         'name',
         'description',
         'is_active',
+        'certificate_image',
     ];
 }
