@@ -6,6 +6,7 @@ use App\Filament\Resources\StudentResource\Pages;
 use App\Filament\Resources\StudentResource\RelationManagers;
 use App\Models\Student;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -33,6 +34,9 @@ class StudentResource extends Resource
                     ->minLength(10),
                 TextInput::make('address_1'),
                 TextInput::make('address_2'),
+                Select::make('standard_id')
+                    ->required()
+                    ->relationship('standard', 'name')
             ]);
     }
 
@@ -40,7 +44,8 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('standard.name')->searchable(),
             ])
             ->filters([
                 //
